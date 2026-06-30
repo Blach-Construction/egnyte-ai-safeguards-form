@@ -135,6 +135,10 @@ p{line-height:1.6; color:#2a323a;}
 .stagger > *:nth-child(4){animation-delay:.22s;}
 .stagger > *:nth-child(5){animation-delay:.28s;}
 .stagger > *:nth-child(6){animation-delay:.34s;}
+.stagger > *:nth-child(7){animation-delay:.40s;}
+.stagger > *:nth-child(8){animation-delay:.46s;}
+.stagger > *:nth-child(9){animation-delay:.52s;}
+.stagger > *:nth-child(10){animation-delay:.58s;}
 .hidden{display:none !important;}
 
 @media (max-width:560px){
@@ -237,52 +241,54 @@ var bugImg = new Image();
 bugImg.src = BUG_LOGO_SRC;
 
 var DEPARTMENTS = [
-  {id:'hr', name:'Human Resources', tagline:'People & personnel records'},
-  {id:'accounting', name:'Accounting', tagline:'Finance, banking & tax'},
-  {id:'marketing', name:'Marketing', tagline:'Confidential & proprietary materials'},
-  {id:'precon', name:'Preconstruction', tagline:'Bids, estimates & pricing'},
-  {id:'construction', name:'Construction', tagline:'Project, site & security info'},
+  {id:'accounting', name:'Accounting',                       tagline:'Finance, banking & tax'},
+  {id:'bdm',        name:'Business Development & Marketing',  tagline:'Pursuits, proposals & brand'},
+  {id:'field_ops',  name:'Field Operations',                 tagline:'Jobsite & field execution'},
+  {id:'hr',         name:'Human Resources',                  tagline:'People & personnel records'},
+  {id:'operations', name:'Operations',                       tagline:'Project management & delivery'},
+  {id:'precon',     name:'Preconstruction',                  tagline:'Bids, estimates & pricing'},
+  {id:'qaqc',       name:'QA/QC',                            tagline:'Quality assurance & control'},
+  {id:'safety',     name:'Safety',                           tagline:'Health, safety & incidents'},
+  {id:'technology', name:'Technology',                       tagline:'IT systems & credentials'},
+  {id:'vdc',        name:'VD&C',                             tagline:'Virtual design & BIM'},
 ];
 
 var OTHER = {key:'other_confidential', title:'Other sensitive / confidential folders', examples:'Anything confidential your team owns that isn’t listed above — legal holds, NDAs, credentials, board materials, etc.', tier:'Optional'};
 
+// Reusable category definitions, shared across departments (from Egnyte AI Safeguards Policy v0.1).
+var C = {
+  pii:                  {key:'pii', title:'Personally identifiable information (PII)', examples:'SSNs, driver’s licenses, dates of birth, home addresses, personal contact info', tier:'Highest priority'},
+  health_medical:       {key:'health_medical', title:'Employee health & medical', examples:'Workers’ comp claims, ADA accommodations, FMLA, benefits / health enrollment, injury records', tier:'Recommended'},
+  work_authorization:   {key:'work_authorization', title:'Work authorization & background', examples:'I-9s, visas / work permits, background checks, drug-test results', tier:'Recommended'},
+  employee_relations:   {key:'employee_relations', title:'Employee relations records', examples:'Performance reviews, discipline, terminations, harassment / ethics investigations', tier:'Recommended'},
+  comp_payroll:         {key:'comp_payroll', title:'Compensation & payroll', examples:'Salaries, bonuses, certified / prevailing-wage payroll (contains SSNs)', tier:'Recommended'},
+  banking:              {key:'banking', title:'Banking information', examples:'Account & routing numbers, wire instructions, payment-change requests, ACH detail', tier:'Highest priority'},
+  tax:                  {key:'tax', title:'Tax information', examples:'Company returns, W-9s / W-4s, 1099s, EINs, sub tax forms', tier:'Highest priority'},
+  company_financials:   {key:'company_financials', title:'Company financials', examples:'P&L, balance sheets, margins, overhead / fee structure', tier:'Recommended'},
+  surety_insurance:     {key:'surety_insurance', title:'Surety & insurance', examples:'Bonding capacity & financials, insurance policies, loss runs', tier:'Recommended'},
+  confidential_business:{key:'confidential_business', title:'Confidential business documents', examples:'Internal strategy, unreleased plans, anything marked confidential / internal-only', tier:'Highest priority'},
+  proprietary_ip:       {key:'proprietary_ip', title:'Proprietary methods & IP', examples:'Prefab / Folia system design detail, BIM models, patents-in-process, proprietary means & methods', tier:'Recommended'},
+  owner_confidential:   {key:'owner_confidential', title:'Owner-confidential project info', examples:'Projects under client NDA / confidentiality clauses; GMP, contingency, project P&L', tier:'Recommended'},
+  bid_estimate:         {key:'bid_estimate', title:'Bid & estimate data', examples:'Cost models, pricing strategy, markup / fee, bid-day numbers', tier:'Recommended'},
+  sub_pricing:          {key:'sub_pricing', title:'Subcontractor pricing', examples:'Sub / vendor quotes, buyout and leveling data', tier:'Recommended'},
+  security_drawings:    {key:'security_drawings', title:'Security-sensitive drawings', examples:'Critical-infrastructure, government / DSA, justice / detention, data-center, utility drawings & specs', tier:'Recommended'},
+  site_security:        {key:'site_security', title:'Site security & access', examples:'Alarm / access codes, camera layouts, security system design', tier:'Recommended'},
+  regulated_data:       {key:'regulated_data', title:'Regulated data', examples:'Government-contract CUI; any student data on education projects (FERPA)', tier:'Recommended'},
+  litigation_claims:    {key:'litigation_claims', title:'Litigation & claims', examples:'Active disputes, claims files, demand letters, legal holds', tier:'Recommended'},
+  credentials:          {key:'credentials', title:'Credentials & system info', examples:'Passwords, API keys, network / system diagrams', tier:'Recommended'}
+};
+
 var CATEGORIES = {
-  hr:[
-    {key:'pii', title:'Personally identifiable information (PII)', examples:'SSNs, driver’s licenses, dates of birth, home addresses, personal contact info', tier:'Highest priority'},
-    {key:'health_medical', title:'Employee health & medical', examples:'Workers’ comp claims, ADA accommodations, FMLA, benefits / health enrollment', tier:'Recommended'},
-    {key:'work_authorization', title:'Work authorization & background', examples:'I-9s, visas / work permits, background checks, drug-test results', tier:'Recommended'},
-    {key:'employee_relations', title:'Employee relations records', examples:'Performance reviews, discipline, terminations, harassment / ethics investigations', tier:'Recommended'},
-    {key:'comp_payroll', title:'Compensation & payroll', examples:'Salaries, bonuses, certified / prevailing-wage payroll (contains SSNs)', tier:'Recommended'},
-    OTHER
-  ],
-  accounting:[
-    {key:'banking', title:'Banking information', examples:'Account & routing numbers, wire instructions, payment-change requests, ACH detail', tier:'Highest priority'},
-    {key:'tax', title:'Tax information', examples:'Company returns, W-9s / W-4s, 1099s, EINs, sub tax forms', tier:'Highest priority'},
-    {key:'company_financials', title:'Company financials', examples:'P&L, balance sheets, margins, overhead / fee structure', tier:'Recommended'},
-    {key:'surety_insurance', title:'Surety & insurance', examples:'Bonding capacity & financials, insurance policies, loss runs', tier:'Recommended'},
-    OTHER
-  ],
-  marketing:[
-    {key:'confidential_business', title:'Confidential business documents', examples:'Internal strategy, unreleased plans, anything marked confidential / internal-only', tier:'Highest priority'},
-    {key:'proprietary_ip', title:'Proprietary methods & IP', examples:'Prefab / Folia system design detail, patents-in-process, proprietary means & methods', tier:'Recommended'},
-    {key:'owner_confidential', title:'Owner-confidential project info', examples:'Projects under client NDA or confidentiality clauses used in pursuits / case studies', tier:'Recommended'},
-    OTHER
-  ],
-  precon:[
-    {key:'bid_estimate', title:'Bid & estimate data', examples:'Cost models, pricing strategy, markup / fee, bid-day numbers', tier:'Recommended'},
-    {key:'sub_pricing', title:'Subcontractor pricing', examples:'Sub / vendor quotes, buyout and leveling data', tier:'Recommended'},
-    {key:'owner_confidential', title:'Owner-confidential project info', examples:'GMP, contingency, project P&L, projects under client NDA / confidentiality clauses', tier:'Recommended'},
-    {key:'proprietary_ip', title:'Proprietary methods & IP', examples:'Proprietary means & methods, prefab / Folia system design detail', tier:'Recommended'},
-    OTHER
-  ],
-  construction:[
-    {key:'security_drawings', title:'Security-sensitive drawings', examples:'Critical-infrastructure, government / DSA, justice / detention, data-center, utility drawings & specs', tier:'Recommended'},
-    {key:'site_security', title:'Site security & access', examples:'Alarm / access codes, camera layouts, security system design', tier:'Recommended'},
-    {key:'sub_pricing', title:'Subcontractor pricing', examples:'Buyout and leveling data, sub / vendor quotes', tier:'Recommended'},
-    {key:'owner_confidential', title:'Owner-confidential project info', examples:'Projects under client NDA or confidentiality clauses; GMP, contingency, project P&L', tier:'Recommended'},
-    {key:'regulated_data', title:'Regulated data', examples:'Government-contract CUI; any student data on education projects (FERPA)', tier:'Recommended'},
-    OTHER
-  ]
+  accounting:  [C.banking, C.tax, C.company_financials, C.surety_insurance, OTHER],
+  bdm:         [C.confidential_business, C.owner_confidential, C.proprietary_ip, OTHER],
+  field_ops:   [C.security_drawings, C.site_security, C.owner_confidential, C.regulated_data, OTHER],
+  hr:          [C.pii, C.health_medical, C.work_authorization, C.employee_relations, C.comp_payroll, OTHER],
+  operations:  [C.owner_confidential, C.sub_pricing, C.litigation_claims, C.confidential_business, OTHER],
+  precon:      [C.bid_estimate, C.sub_pricing, C.owner_confidential, C.proprietary_ip, OTHER],
+  qaqc:        [C.owner_confidential, C.regulated_data, C.litigation_claims, OTHER],
+  safety:      [C.health_medical, C.litigation_claims, C.regulated_data, OTHER],
+  technology:  [C.credentials, C.confidential_business, OTHER],
+  vdc:         [C.proprietary_ip, C.security_drawings, C.owner_confidential, OTHER]
 };
 
 var emailReady = EMAILJS_PUBLIC_KEY.indexOf("YOUR_") !== 0 && EMAILJS_SERVICE_ID.indexOf("YOUR_") !== 0 && EMAILJS_TEMPLATE_ID.indexOf("YOUR_") !== 0;
