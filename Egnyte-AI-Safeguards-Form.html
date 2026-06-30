@@ -162,7 +162,7 @@ p{line-height:1.6; color:#2a323a;}
     <p class="lead">This quick form takes about 5 minutes. As a department head, you know best which folders hold your team's most sensitive content. Tell us where they live in <strong>Egnyte</strong>, and we'll add them to the AI Safeguards policy so AI tools can't read them.</p>
     <div class="why-grid">
       <div class="why-item"><div class="ico">🤖</div><strong>AI reads what you read</strong><span>The Claude / <strong>Egnyte</strong> connector signs in as you and can read anything you can — unless we tell <strong>Egnyte</strong> not to.</span></div>
-      <div class="why-item"><div class="ico">🛡️</div><strong>Safeguards block AI only</strong><span>AI Safeguards stop AI from reading a folder while your team keeps full normal access to those files.</span></div>
+      <div class="why-item"><div class="ico">🛡️</div><strong>Safeguards block AI only</strong><span>A listed folder becomes completely unreadable to Claude and all AI tools — while your team keeps full normal access to the files.</span></div>
       <div class="why-item"><div class="ico">📁</div><strong>You point us at folders</strong><span>Paste the <strong>Egnyte</strong> folder paths that hold sensitive content. Everything inside gets added to the policy.</span></div>
       <div class="why-item"><div class="ico">⚠️</div><strong>Why it matters</strong><span>PII, banking, payroll, bids and confidential project data must never be summarized or echoed by AI.</span></div>
     </div>
@@ -191,7 +191,8 @@ p{line-height:1.6; color:#2a323a;}
       </div>
       <div id="saver" class="saver hidden"><span class="dot"></span><span id="saver-text"></span></div>
     </div>
-    <p class="lead" style="margin-top:4px;">Paste the <strong>Egnyte</strong> <strong>folder</strong> path(s) that hold each type of content — one folder per line. Everything inside a listed folder (and its subfolders) will be added to the AI Safeguards policy.</p>
+    <p class="lead" style="margin-top:4px;">Paste the <strong>Egnyte</strong> <strong>folder</strong> path(s) that hold each type of content — one folder per line. Everything inside a listed folder (and its subfolders) is added to the AI Safeguards policy.</p>
+    <div class="callout" style="background:rgba(193,2,48,0.07); border-left-color:var(--blach-red);"><span>🔒</span><div><strong>Important:</strong> every folder you submit becomes <strong>completely unusable by Claude and all AI tools</strong> — AI will not be able to read, open, summarize, or reference anything inside it. Your team keeps full normal access; only AI is blocked. So only list folders whose contents should <em>never</em> be processed by AI.</div></div>
     <div id="form-error" class="banner err hidden"></div>
     <div class="identity">
       <label for="submittedBy">Your name (so we know who submitted)</label>
