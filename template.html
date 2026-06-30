@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Egnyte AI Safeguards · Folder Intake</title>
+
+<!-- EmailJS (auto-sends the submit alert, no server needed) -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<style>
+/* ===== Blach brand fonts (embedded) ===== */
+@font-face{font-family:"Gotham";font-weight:300;font-style:normal;src:url(data:font/woff;base64,%%FONT_LIGHT%%) format("woff");font-display:swap;}
+@font-face{font-family:"Gotham";font-weight:400;font-style:normal;src:url(data:font/woff;base64,%%FONT_BOOK%%) format("woff");font-display:swap;}
+@font-face{font-family:"Gotham";font-weight:500;font-style:normal;src:url(data:font/woff;base64,%%FONT_MEDIUM%%) format("woff");font-display:swap;}
+@font-face{font-family:"Gotham";font-weight:700;font-style:normal;src:url(data:font/woff;base64,%%FONT_BOLD%%) format("woff");font-display:swap;}
+@font-face{font-family:"Gotham";font-weight:900;font-style:normal;src:url(data:font/woff;base64,%%FONT_BLACK%%) format("woff");font-display:swap;}
+
+:root{
+  --blach-blue:#0076BB; --blach-gray:#A2A9AD;
+  --blach-cyan:#00AEEF; --blach-teal:#009CA6; --blach-dark-blue:#00487A; --blach-navy:#003B64;
+  --blach-red:#C10230; --blach-orange:#FE5000; --blach-yellow:#F5A800; --blach-green:#80BC00;
+  --blach-light-grey:#CFD2D3; --blach-dark-grey:#5B6670; --blach-black:#000; --blach-white:#fff;
+  --blach-font:"Gotham",Arial,Helvetica,sans-serif;
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0; font-family:var(--blach-font); font-weight:400; color:var(--blach-black);
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(0,174,239,.18), transparent 60%),
+    radial-gradient(1000px 500px at -10% 110%, rgba(0,118,187,.16), transparent 55%),
+    linear-gradient(160deg,#f4f8fb 0%,#eaf1f6 100%);
+  background-attachment:fixed; -webkit-font-smoothing:antialiased;
+}
+.app{min-height:100%; max-width:920px; margin:0 auto; padding:32px 20px 80px;}
+
+/* header */
+.topbar{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:28px;}
+.topbar img{height:34px;}
+.topbar .tag{font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--blach-dark-grey); font-weight:500;}
+
+/* card */
+.card{
+  background:var(--blach-white); border-radius:18px; padding:32px;
+  box-shadow:0 12px 40px rgba(0,59,100,.10), 0 2px 6px rgba(0,59,100,.06);
+  border:1px solid rgba(0,118,187,.08);
+}
+h1{font-weight:900; color:var(--blach-blue); font-size:30px; line-height:1.1; margin:0 0 12px;}
+h2{font-weight:700; color:var(--blach-navy); font-size:22px; margin:0 0 10px;}
+h3{font-weight:700; color:var(--blach-blue); font-size:16px; margin:0;}
+p{line-height:1.6; color:#2a323a;}
+.lead{font-size:17px; color:#2a323a;}
+.eyebrow{display:inline-block; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--blach-teal); font-weight:700; margin-bottom:12px;}
+
+/* why grid */
+.why-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:22px 0 26px;}
+.why-item{background:linear-gradient(180deg,#f7fbfe,#eef5fa); border:1px solid rgba(0,118,187,.12); border-radius:14px; padding:16px 18px;}
+.why-item .ico{font-size:22px;}
+.why-item > strong{display:block; color:var(--blach-navy); margin:8px 0 4px;}
+.why-item span{font-size:14px; color:var(--blach-dark-grey); line-height:1.5;}
+
+.callout{display:flex; gap:12px; align-items:flex-start; background:rgba(245,168,0,.12); border-left:4px solid var(--blach-yellow); border-radius:10px; padding:14px 16px; margin:22px 0; font-size:14.5px;}
+
+/* buttons */
+.btn{font-family:var(--blach-font); font-weight:700; font-size:15px; border:none; border-radius:12px; padding:14px 26px; cursor:pointer; transition:transform .12s ease, box-shadow .2s ease, background .2s ease;}
+.btn-primary{background:linear-gradient(135deg,var(--blach-blue),var(--blach-cyan)); color:#fff; box-shadow:0 8px 20px rgba(0,118,187,.35);}
+.btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 26px rgba(0,118,187,.45);}
+.btn-primary:active{transform:translateY(0);}
+.btn-primary:disabled{opacity:.55; cursor:not-allowed; transform:none; box-shadow:none;}
+.btn-ghost{background:transparent; color:var(--blach-blue); border:1px solid rgba(0,118,187,.3);}
+.btn-ghost:hover{background:rgba(0,118,187,.06);}
+.btn-row{display:flex; align-items:center; gap:14px; margin-top:26px; flex-wrap:wrap;}
+
+/* department picker */
+.dept-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; margin-top:24px;}
+.dept-card{text-align:left; background:var(--blach-white); border:1.5px solid rgba(0,118,187,.14); border-radius:16px; padding:22px; cursor:pointer; transition:transform .14s ease, box-shadow .2s ease, border-color .2s ease; position:relative; overflow:hidden; font-family:var(--blach-font);}
+.dept-card::after{content:'→'; position:absolute; right:18px; bottom:16px; font-weight:700; color:var(--blach-cyan); opacity:0; transform:translateX(-6px); transition:opacity .2s, transform .2s;}
+.dept-card:hover{transform:translateY(-4px); box-shadow:0 16px 34px rgba(0,59,100,.16); border-color:var(--blach-cyan);}
+.dept-card:hover::after{opacity:1; transform:translateX(0);}
+.dept-card .dept-name{font-weight:700; color:var(--blach-navy); font-size:18px;}
+.dept-card .dept-tag{font-size:13.5px; color:var(--blach-dark-grey); margin-top:6px;}
+.dept-card .badge-done{display:inline-block; margin-top:12px; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#fff; background:var(--blach-green); border-radius:999px; padding:3px 10px;}
+
+/* form */
+.form-head{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:6px;}
+.identity{margin:18px 0 8px;}
+.identity label{display:block; font-size:13px; font-weight:500; color:var(--blach-dark-grey); margin-bottom:6px;}
+.text-input,.path-input{width:100%; font-family:var(--blach-font); font-size:14.5px; color:#1c2228; border:1.5px solid rgba(0,59,100,.16); border-radius:12px; padding:12px 14px; background:#fcfdfe; transition:border-color .18s, box-shadow .18s; resize:vertical;}
+.text-input:focus,.path-input:focus{outline:none; border-color:var(--blach-cyan); box-shadow:0 0 0 4px rgba(0,174,239,.14);}
+.path-input{min-height:76px; line-height:1.5; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;}
+.cat{border:1px solid rgba(0,118,187,.1); border-radius:16px; padding:18px 20px; margin-top:16px; background:linear-gradient(180deg,#fff,#fafcfe);}
+.cat-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px;}
+.cat-tier{font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; white-space:nowrap; padding:3px 9px; border-radius:999px;}
+.cat-tier.t1{color:var(--blach-red); background:rgba(193,2,48,.1);}
+.cat-tier.t2{color:var(--blach-dark-blue); background:rgba(0,72,122,.1);}
+.cat-tier.other{color:var(--blach-dark-grey); background:rgba(91,102,112,.12);}
+.cat-examples{font-size:13px; color:var(--blach-dark-grey); margin:6px 0 12px; line-height:1.5;}
+.cat-count{font-size:12px; color:var(--blach-teal); font-weight:500; margin-top:6px; min-height:16px;}
+
+/* autosave / draft indicator */
+.saver{display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:500; color:var(--blach-dark-grey);}
+.saver .dot{width:9px; height:9px; border-radius:50%; background:var(--blach-gray);}
+.saver.saving .dot{background:var(--blach-yellow); animation:pulse 1s infinite;}
+.saver.saved .dot{background:var(--blach-green);}
+.saver.error .dot{background:var(--blach-red);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+.banner{border-radius:12px; padding:12px 16px; font-size:14px; margin-bottom:18px;}
+.banner.warn{background:rgba(245,168,0,.14); border:1px solid rgba(245,168,0,.4); color:#7a5400;}
+.banner.err{background:rgba(193,2,48,.1); border:1px solid rgba(193,2,48,.35); color:#8a0a25;}
+
+/* success */
+#view-success{position:relative; z-index:10000;} /* sit above the confetti canvas (z-index 9999) */
+.success-wrap{text-align:center; padding:20px 10px;}
+.check-svg{display:block; width:92px; height:92px; margin:0 auto 18px; animation:check-in .4s ease both;}
+.check-bg{fill:rgba(128,188,0,.12);}
+.check-ring{fill:none; stroke:var(--blach-green); stroke-width:4; stroke-dasharray:239; stroke-dashoffset:239; animation:draw-ring .55s ease-out .1s forwards;}
+.check-mark{fill:none; stroke:var(--blach-green); stroke-width:5.5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:50; stroke-dashoffset:50; animation:draw-check .35s cubic-bezier(.65,0,.45,1) .58s forwards;}
+@keyframes check-in{from{opacity:0; transform:scale(.8);} to{opacity:1; transform:scale(1);}}
+@keyframes draw-ring{to{stroke-dashoffset:0;}}
+@keyframes draw-check{to{stroke-dashoffset:0;}}
+
+.footnote{text-align:center; font-size:12px; color:var(--blach-gray); margin-top:28px;}
+
+/* view transitions */
+.view{animation:fadeUp .45s ease both;}
+@keyframes fadeUp{0%{opacity:0; transform:translateY(20px);}100%{opacity:1; transform:translateY(0);}}
+.stagger > *{animation:fadeUp .45s ease both;}
+.stagger > *:nth-child(1){animation-delay:.04s;}
+.stagger > *:nth-child(2){animation-delay:.10s;}
+.stagger > *:nth-child(3){animation-delay:.16s;}
+.stagger > *:nth-child(4){animation-delay:.22s;}
+.stagger > *:nth-child(5){animation-delay:.28s;}
+.stagger > *:nth-child(6){animation-delay:.34s;}
+.hidden{display:none !important;}
+
+@media (max-width:560px){
+  .why-grid{grid-template-columns:1fr;}
+  .card{padding:22px;}
+  h1{font-size:25px;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <img src="data:image/png;base64,%%LOGO%%" alt="Blach Construction" />
+    <span class="tag">AI Safeguards</span>
+  </header>
+
+  <!-- ===== Intro ===== -->
+  <section id="view-intro" class="view card">
+    <span class="eyebrow">Egnyte AI Safeguards · Folder Intake</span>
+    <h1>Help us keep sensitive files away from AI</h1>
+    <p class="lead">This quick form takes about 5 minutes. As a department head, you know best which folders hold your team's most sensitive content. Tell us where they live in <strong>Egnyte</strong>, and we'll add them to the AI Safeguards policy so AI tools can't read them.</p>
+    <div class="why-grid">
+      <div class="why-item"><div class="ico">🤖</div><strong>AI reads what you read</strong><span>The Claude / <strong>Egnyte</strong> connector signs in as you and can read anything you can — unless we tell <strong>Egnyte</strong> not to.</span></div>
+      <div class="why-item"><div class="ico">🛡️</div><strong>Safeguards block AI only</strong><span>AI Safeguards stop AI from reading a folder while your team keeps full normal access to those files.</span></div>
+      <div class="why-item"><div class="ico">📁</div><strong>You point us at folders</strong><span>Paste the <strong>Egnyte</strong> folder paths that hold sensitive content. Everything inside gets added to the policy.</span></div>
+      <div class="why-item"><div class="ico">⚠️</div><strong>Why it matters</strong><span>PII, banking, payroll, bids and confidential project data must never be summarized or echoed by AI.</span></div>
+    </div>
+    <div class="callout"><span>📌</span><div><strong>What you'll do:</strong> pick your department, then paste <strong>Egnyte</strong> <em>folder</em> paths (not individual files) next to each type of sensitive document. You can paste several folders per box — one per line. Your draft saves automatically in this browser as you go.</div></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="go('picker')">Get started →</button>
+      <span style="font-size:13px; color:var(--blach-dark-grey);">Internal · Confidential — Blach Construction</span>
+    </div>
+  </section>
+
+  <!-- ===== Department picker ===== -->
+  <section id="view-picker" class="view card hidden">
+    <span class="eyebrow">Step 1 of 2</span>
+    <h1>Select your department</h1>
+    <p class="lead">Choose the department you lead. We'll show the sensitive-content categories that typically apply to your team.</p>
+    <div id="dept-grid" class="dept-grid stagger"></div>
+    <div class="btn-row"><button class="btn btn-ghost" onclick="go('intro')">← Back</button></div>
+  </section>
+
+  <!-- ===== Form ===== -->
+  <section id="view-form" class="view card hidden">
+    <div class="form-head">
+      <div>
+        <span class="eyebrow" id="form-eyebrow">Step 2 of 2</span>
+        <h1 id="form-title">Sensitive folders</h1>
+      </div>
+      <div id="saver" class="saver hidden"><span class="dot"></span><span id="saver-text"></span></div>
+    </div>
+    <p class="lead" style="margin-top:4px;">Paste the <strong>Egnyte</strong> <strong>folder</strong> path(s) that hold each type of content — one folder per line. Everything inside a listed folder (and its subfolders) will be added to the AI Safeguards policy.</p>
+    <div id="form-error" class="banner err hidden"></div>
+    <div class="identity">
+      <label for="submittedBy">Your name (so we know who submitted)</label>
+      <input id="submittedBy" class="text-input" type="text" placeholder="e.g. Jordan Smith" oninput="onInput()" />
+    </div>
+    <div id="cats"></div>
+    <div class="btn-row" style="justify-content:space-between;">
+      <button class="btn btn-ghost" onclick="go('picker')">← Change department</button>
+      <button id="submitBtn" class="btn btn-primary" onclick="submitForm()" disabled>Submit</button>
+    </div>
+    <p class="footnote" id="email-note"></p>
+  </section>
+
+  <!-- ===== Success ===== -->
+  <section id="view-success" class="view card hidden">
+    <div class="success-wrap">
+      <svg class="check-svg" viewBox="0 0 84 84" role="img" aria-label="Success">
+        <circle class="check-bg" cx="42" cy="42" r="40"/>
+        <circle class="check-ring" cx="42" cy="42" r="38"/>
+        <path class="check-mark" d="M26 43.5 L37.5 55 L59 31"/>
+      </svg>
+      <h1>Thank you!</h1>
+      <p class="lead">Your folder paths for <strong id="success-dept"></strong> have been submitted, and an alert was sent to the AI Implementation Lead. These folders will be added to the <strong>Egnyte</strong> AI Safeguards policy.</p>
+      <p style="color:var(--blach-dark-grey); font-size:14px;">You can come back any time to update your list — your draft is saved in this browser.</p>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn btn-ghost" onclick="go('form')">Edit this department again</button>
+        <button class="btn btn-primary" onclick="go('picker')">Submit for another department</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+/* =======================================================================
+   CONFIG — fill these in from your EmailJS account (https://emailjs.com).
+   The email recipient (dalton.kirkpatrick@blach.com) is set in the EmailJS
+   TEMPLATE itself, not here. See the README for the exact template variables.
+   ======================================================================= */
+var EMAILJS_PUBLIC_KEY  = "YOUR_PUBLIC_KEY";
+var EMAILJS_SERVICE_ID  = "YOUR_SERVICE_ID";
+var EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+/* ===================================================================== */
+
+/* Blach "bug" logo used as confetti on the Thank-you screen (embedded at build). */
+var BUG_LOGO_SRC = "data:image/png;base64,%%LOGO_BUG%%";
+var bugImg = new Image();
+bugImg.src = BUG_LOGO_SRC;
+
+var DEPARTMENTS = [
+  {id:'hr', name:'Human Resources', tagline:'People & personnel records'},
+  {id:'accounting', name:'Accounting', tagline:'Finance, banking & tax'},
+  {id:'marketing', name:'Marketing', tagline:'Confidential & proprietary materials'},
+  {id:'precon', name:'Preconstruction', tagline:'Bids, estimates & pricing'},
+  {id:'construction', name:'Construction', tagline:'Project, site & security info'},
+];
+
+var OTHER = {key:'other_confidential', title:'Other sensitive / confidential folders', examples:'Anything confidential your team owns that isn’t listed above — legal holds, NDAs, credentials, board materials, etc.', tier:'Optional'};
+
+var CATEGORIES = {
+  hr:[
+    {key:'pii', title:'Personally identifiable information (PII)', examples:'SSNs, driver’s licenses, dates of birth, home addresses, personal contact info', tier:'Highest priority'},
+    {key:'health_medical', title:'Employee health & medical', examples:'Workers’ comp claims, ADA accommodations, FMLA, benefits / health enrollment', tier:'Recommended'},
+    {key:'work_authorization', title:'Work authorization & background', examples:'I-9s, visas / work permits, background checks, drug-test results', tier:'Recommended'},
+    {key:'employee_relations', title:'Employee relations records', examples:'Performance reviews, discipline, terminations, harassment / ethics investigations', tier:'Recommended'},
+    {key:'comp_payroll', title:'Compensation & payroll', examples:'Salaries, bonuses, certified / prevailing-wage payroll (contains SSNs)', tier:'Recommended'},
+    OTHER
+  ],
+  accounting:[
+    {key:'banking', title:'Banking information', examples:'Account & routing numbers, wire instructions, payment-change requests, ACH detail', tier:'Highest priority'},
+    {key:'tax', title:'Tax information', examples:'Company returns, W-9s / W-4s, 1099s, EINs, sub tax forms', tier:'Highest priority'},
+    {key:'company_financials', title:'Company financials', examples:'P&L, balance sheets, margins, overhead / fee structure', tier:'Recommended'},
+    {key:'surety_insurance', title:'Surety & insurance', examples:'Bonding capacity & financials, insurance policies, loss runs', tier:'Recommended'},
+    OTHER
+  ],
+  marketing:[
+    {key:'confidential_business', title:'Confidential business documents', examples:'Internal strategy, unreleased plans, anything marked confidential / internal-only', tier:'Highest priority'},
+    {key:'proprietary_ip', title:'Proprietary methods & IP', examples:'Prefab / Folia system design detail, patents-in-process, proprietary means & methods', tier:'Recommended'},
+    {key:'owner_confidential', title:'Owner-confidential project info', examples:'Projects under client NDA or confidentiality clauses used in pursuits / case studies', tier:'Recommended'},
+    OTHER
+  ],
+  precon:[
+    {key:'bid_estimate', title:'Bid & estimate data', examples:'Cost models, pricing strategy, markup / fee, bid-day numbers', tier:'Recommended'},
+    {key:'sub_pricing', title:'Subcontractor pricing', examples:'Sub / vendor quotes, buyout and leveling data', tier:'Recommended'},
+    {key:'owner_confidential', title:'Owner-confidential project info', examples:'GMP, contingency, project P&L, projects under client NDA / confidentiality clauses', tier:'Recommended'},
+    {key:'proprietary_ip', title:'Proprietary methods & IP', examples:'Proprietary means & methods, prefab / Folia system design detail', tier:'Recommended'},
+    OTHER
+  ],
+  construction:[
+    {key:'security_drawings', title:'Security-sensitive drawings', examples:'Critical-infrastructure, government / DSA, justice / detention, data-center, utility drawings & specs', tier:'Recommended'},
+    {key:'site_security', title:'Site security & access', examples:'Alarm / access codes, camera layouts, security system design', tier:'Recommended'},
+    {key:'sub_pricing', title:'Subcontractor pricing', examples:'Buyout and leveling data, sub / vendor quotes', tier:'Recommended'},
+    {key:'owner_confidential', title:'Owner-confidential project info', examples:'Projects under client NDA or confidentiality clauses; GMP, contingency, project P&L', tier:'Recommended'},
+    {key:'regulated_data', title:'Regulated data', examples:'Government-contract CUI; any student data on education projects (FERPA)', tier:'Recommended'},
+    OTHER
+  ]
+};
+
+var emailReady = EMAILJS_PUBLIC_KEY.indexOf("YOUR_") !== 0 && EMAILJS_SERVICE_ID.indexOf("YOUR_") !== 0 && EMAILJS_TEMPLATE_ID.indexOf("YOUR_") !== 0;
+if (emailReady && window.emailjs) { emailjs.init({publicKey: EMAILJS_PUBLIC_KEY}); }
+
+var currentDept = null;
+var saveTimer = null;
+
+function go(view){
+  ['intro','picker','form','success'].forEach(function(v){
+    document.getElementById('view-'+v).classList.add('hidden');
+  });
+  var el = document.getElementById('view-'+view);
+  el.classList.remove('hidden');
+  // re-trigger entry animation
+  el.style.animation='none'; void el.offsetWidth; el.style.animation='';
+  if(view==='picker') renderPicker();
+  if(view==='form') renderForm();
+  if(view==='success'){ launchConfetti(); } else { stopConfetti(); }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ===== Confetti cannons: little Blach logos + brand confetti, looping from both bottom corners.
+   Low gravity + drag + sideways flutter make pieces float gently down rather than fall. ===== */
+var CONFETTI_COLORS = ['#0076BB','#00AEEF','#009CA6','#F5A800','#80BC00','#00487A'];
+var confetti = { running:false, canvas:null, ctx:null, particles:[], raf:0, spawnTimer:0, resize:null };
+
+function makeParticles(side){ // side: -1 = bottom-left, 1 = bottom-right
+  if(confetti.particles.length > 600) return; // cap (e.g. if the tab was backgrounded)
+  var per = window.innerWidth < 560 ? 16 : 26;
+  var originX = side < 0 ? 0 : window.innerWidth;
+  var originY = window.innerHeight;
+  // Aim up and inward: left corner -> up-right (-62°), right corner -> up-left (-118°)
+  var baseAngle = (side < 0 ? -62 : -118) * Math.PI/180;
+  for(var i=0;i<per;i++){
+    var speed = (window.innerHeight*0.012) + 6 + Math.random()*11;
+    var angle = baseAngle + (Math.random()*44 - 22) * Math.PI/180;
+    var isLogo = bugImg.complete && Math.random() < 0.45;
+    confetti.particles.push({
+      x:originX, y:originY,
+      vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed,
+      rot:Math.random()*Math.PI*2, vrot:(Math.random()-0.5)*0.14,
+      size: isLogo ? (14+Math.random()*14) : (7+Math.random()*7),
+      type: isLogo ? 'logo' : (Math.random()<0.5 ? 'rect' : 'circle'),
+      color: CONFETTI_COLORS[(Math.random()*CONFETTI_COLORS.length)|0],
+      opacity:1, life:0,
+      swayAmp: 0.4 + Math.random()*1.1, swayFreq: 0.02 + Math.random()*0.03, swayPhase: Math.random()*Math.PI*2
+    });
+  }
+}
+
+function launchConfetti(){
+  if(confetti.running) return;
+  cleanupConfetti(); // clear any lingering canvas from a previous stop
+  confetti.running = true;
+  var canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;';
+  document.body.appendChild(canvas);
+  var ctx = canvas.getContext('2d');
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  confetti.resize = function(){ canvas.width = window.innerWidth*dpr; canvas.height = window.innerHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); };
+  confetti.resize();
+  window.addEventListener('resize', confetti.resize);
+  confetti.canvas = canvas; confetti.ctx = ctx; confetti.particles = [];
+
+  function fire(){ makeParticles(-1); makeParticles(1); }
+  fire();
+  confetti.spawnTimer = setInterval(function(){ if(confetti.running) fire(); }, 850);
+
+  var gravity = 0.09, drag = 0.986;
+  function tick(){
+    ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+    var ps = confetti.particles;
+    for(var i=ps.length-1;i>=0;i--){
+      var p = ps[i];
+      p.vy += gravity; p.vx *= drag; p.vy *= drag;
+      p.x += p.vx + Math.sin(p.life*p.swayFreq + p.swayPhase)*p.swayAmp;
+      p.y += p.vy; p.rot += p.vrot; p.life++;
+      if(p.life > 150) p.opacity -= 0.008;
+      if(p.opacity <= 0 || p.y > window.innerHeight + 80){ ps.splice(i,1); continue; }
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.opacity);
+      ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      if(p.type === 'logo'){
+        ctx.drawImage(bugImg, -p.size/2, -p.size/2, p.size, p.size);
+      } else if(p.type === 'rect'){
+        ctx.fillStyle = p.color; ctx.fillRect(-p.size/2, -p.size/3, p.size, p.size*0.66);
+      } else {
+        ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(0,0,p.size/2,0,Math.PI*2); ctx.fill();
+      }
+      ctx.restore();
+    }
+    if(confetti.running || ps.length > 0){ confetti.raf = requestAnimationFrame(tick); }
+    else { cleanupConfetti(); }
+  }
+  confetti.raf = requestAnimationFrame(tick);
+}
+
+function cleanupConfetti(){
+  if(confetti.spawnTimer){ clearInterval(confetti.spawnTimer); confetti.spawnTimer = 0; }
+  if(confetti.raf){ cancelAnimationFrame(confetti.raf); confetti.raf = 0; }
+  if(confetti.resize){ window.removeEventListener('resize', confetti.resize); confetti.resize = null; }
+  if(confetti.canvas){ confetti.canvas.remove(); confetti.canvas = null; }
+  confetti.particles = [];
+}
+
+function stopConfetti(){
+  if(!confetti.running && !confetti.canvas) return;
+  confetti.running = false;                 // stop launching new bursts
+  if(confetti.spawnTimer){ clearInterval(confetti.spawnTimer); confetti.spawnTimer = 0; }
+  if(!confetti.raf){ cleanupConfetti(); }    // if no frame loop is draining them, clean up now
+  // otherwise tick() lets the remaining pieces float off, then cleans up.
+}
+
+function lsKey(d){ return 'egnyte-safeguards:'+d; }
+function loadDraft(d){ try{ return JSON.parse(localStorage.getItem(lsKey(d))||'{}'); }catch(e){ return {}; } }
+function saveDraft(d, data){ try{ localStorage.setItem(lsKey(d), JSON.stringify(data)); }catch(e){} }
+function isSubmitted(d){ return loadDraft(d).submitted_at ? true : false; }
+
+function renderPicker(){
+  var grid = document.getElementById('dept-grid');
+  grid.innerHTML='';
+  DEPARTMENTS.forEach(function(d){
+    var b = document.createElement('button');
+    b.className='dept-card';
+    b.onclick=function(){ currentDept=d.id; go('form'); };
+    var done = isSubmitted(d.id) ? '<span class="badge-done">✓ Submitted</span>' : '';
+    b.innerHTML='<div class="dept-name">'+d.name+'</div><div class="dept-tag">'+d.tagline+'</div>'+done;
+    grid.appendChild(b);
+  });
+}
+
+function countFolders(v){ return (v||'').split(/\r?\n/).map(function(l){return l.trim();}).filter(Boolean).length; }
+function tierClass(t){ return t==='Highest priority'?'t1':(t==='Recommended'?'t2':'other'); }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderForm(){
+  var dept = DEPARTMENTS.filter(function(d){return d.id===currentDept;})[0];
+  var cats = CATEGORIES[currentDept] || [];
+  var draft = loadDraft(currentDept);
+  var fields = draft.fields || {};
+
+  document.getElementById('form-eyebrow').textContent = 'Step 2 of 2 · ' + dept.name;
+  document.getElementById('form-title').innerHTML = 'Sensitive folders for <u>' + dept.name + '</u>';
+  document.getElementById('submittedBy').value = draft.submittedBy || '';
+  document.getElementById('form-error').classList.add('hidden');
+  document.getElementById('saver').className = 'saver hidden';
+
+  var note = document.getElementById('email-note');
+  note.textContent = emailReady ? '' : 'Note: EmailJS isn’t configured in this file yet, so Submit can’t send the alert. Your draft still saves. (See the CONFIG block at the top of the file.)';
+
+  var wrap = document.getElementById('cats');
+  wrap.innerHTML='';
+  cats.forEach(function(cat){
+    var div = document.createElement('div');
+    div.className='cat';
+    var val = fields[cat.key] || '';
+    div.innerHTML =
+      '<div class="cat-head"><h3>'+cat.title+'</h3><span class="cat-tier '+tierClass(cat.tier)+'">'+cat.tier+'</span></div>'+
+      '<div class="cat-examples">'+cat.examples+'</div>'+
+      '<textarea class="path-input" data-key="'+cat.key+'" placeholder="Shared/HR/Personnel&#10;Shared/Finance/Wire Instructions" oninput="onInput()">'+esc(val)+'</textarea>'+
+      '<div class="cat-count" data-count="'+cat.key+'"></div>';
+    wrap.appendChild(div);
+  });
+  updateCounts();
+}
+
+function gather(){
+  var fields = {};
+  document.querySelectorAll('#cats textarea').forEach(function(t){ fields[t.getAttribute('data-key')] = t.value; });
+  return { fields: fields, submittedBy: document.getElementById('submittedBy').value };
+}
+
+function updateCounts(){
+  var total = 0;
+  document.querySelectorAll('#cats textarea').forEach(function(t){
+    var n = countFolders(t.value); total += n;
+    var c = document.querySelector('[data-count="'+t.getAttribute('data-key')+'"]');
+    if(c) c.textContent = n>0 ? (n+' folder'+(n===1?'':'s')+' added') : '';
+  });
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = total===0;
+  btn.textContent = total>0 ? ('Submit ('+total+' folders)') : 'Submit';
+  return total;
+}
+
+function setSaver(state, text){
+  var s = document.getElementById('saver');
+  s.className = 'saver ' + state;
+  document.getElementById('saver-text').textContent = text;
+}
+
+function onInput(){
+  updateCounts();
+  setSaver('saving','Saving…');
+  if(saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    var data = gather();
+    var prev = loadDraft(currentDept);
+    if(prev.submitted_at) data.submitted_at = prev.submitted_at; // keep submit stamp
+    saveDraft(currentDept, data);
+    setSaver('saved','Draft saved');
+  }, 700);
+}
+
+function buildSummary(cats, fields){
+  var lines = [];
+  cats.forEach(function(cat){
+    var v = (fields[cat.key]||'').trim();
+    if(!v) return;
+    var folders = v.split(/\r?\n/).map(function(l){return l.trim();}).filter(Boolean);
+    lines.push(cat.title + ':\n  - ' + folders.join('\n  - '));
+  });
+  return lines.length ? lines.join('\n\n') : '(No folder paths were entered.)';
+}
+
+function submitForm(){
+  var dept = DEPARTMENTS.filter(function(d){return d.id===currentDept;})[0];
+  var cats = CATEGORIES[currentDept] || [];
+  var data = gather();
+  var total = 0;
+  cats.forEach(function(c){ total += countFolders(data.fields[c.key]); });
+
+  var errEl = document.getElementById('form-error');
+  errEl.classList.add('hidden');
+
+  if(total===0){ return; }
+
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Submitting…';
+
+  var params = {
+    department: dept.name,
+    submitted_by: data.submittedBy || 'Not provided',
+    submitted_at: new Date().toLocaleString(),
+    total_folders: total,
+    summary: buildSummary(cats, data.fields)
+  };
+
+  function finish(){
+    data.submitted_at = new Date().toISOString();
+    saveDraft(currentDept, data);
+    document.getElementById('success-dept').textContent = dept.name;
+    go('success');
+  }
+
+  if(!emailReady || !window.emailjs){
+    console.info('[EmailJS not configured] Would send:', params);
+    finish();
+    return;
+  }
+
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+    .then(function(){ finish(); })
+    .catch(function(err){
+      console.error('EmailJS send failed:', err);
+      errEl.textContent = 'Sorry — the alert email failed to send. Your draft is saved. Please try Submit again, or contact dalton.kirkpatrick@blach.com.';
+      errEl.classList.remove('hidden');
+      btn.disabled = false; updateCounts();
+    });
+}
+</script>
+</body>
+</html>
