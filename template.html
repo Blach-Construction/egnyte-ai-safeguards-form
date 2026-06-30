@@ -423,11 +423,13 @@ function renderPicker(){
 
 function countFolders(v){ return (v||'').split(/\r?\n/).map(function(l){return l.trim();}).filter(Boolean).length; }
 function tierClass(t){ return t==='Highest priority'?'t1':(t==='Recommended'?'t2':'other'); }
+function tierRank(t){ return t==='Highest priority'?0:(t==='Optional'?2:1); } // sort order: Highest priority first, Optional last
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function renderForm(){
   var dept = DEPARTMENTS.filter(function(d){return d.id===currentDept;})[0];
-  var cats = CATEGORIES[currentDept] || [];
+  // Always show "Highest priority" categories first, then Recommended, then the Optional catch-all.
+  var cats = (CATEGORIES[currentDept] || []).slice().sort(function(a,b){ return tierRank(a.tier) - tierRank(b.tier); });
   var draft = loadDraft(currentDept);
   var fields = draft.fields || {};
 
@@ -507,7 +509,7 @@ function buildSummary(cats, fields){
 
 function submitForm(){
   var dept = DEPARTMENTS.filter(function(d){return d.id===currentDept;})[0];
-  var cats = CATEGORIES[currentDept] || [];
+  var cats = (CATEGORIES[currentDept] || []).slice().sort(function(a,b){ return tierRank(a.tier) - tierRank(b.tier); });
   var data = gather();
   var total = 0;
   cats.forEach(function(c){ total += countFolders(data.fields[c.key]); });
