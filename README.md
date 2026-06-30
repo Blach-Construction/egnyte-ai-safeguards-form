@@ -52,28 +52,25 @@ category, and click **Submit** — which auto-sends an alert email to
 That's it — re-save the file and send it out. Until these are filled in, the form
 works but Submit just logs to the console instead of emailing.
 
-## 2. Host it at a shareable URL (recommended)
+## 2. Hosting — LIVE on GitHub Pages
 
-Hosting at a real `https://` URL is the recommended way to share this — EmailJS
-sends reliably from a proper domain (it can be flaky from a `file://` link), and
-everyone always gets the latest version. The build produces a `deploy/` folder
-containing `index.html` for exactly this.
+This is deployed at:
 
-**Fastest: Netlify Drop (free, no repo, private source)**
-1. Fill in your EmailJS keys (section 1) and re-run `build.ps1`.
-2. Go to <https://app.netlify.com/drop> and sign up (free) so the site persists.
-3. Drag the whole **`deploy`** folder onto the page. You get a URL like
-   `https://your-site.netlify.app` — rename it in site settings if you like.
-4. In EmailJS **Account → Security**, add that domain to the allowed origins so
-   the keys can't be reused elsewhere.
-5. Open the URL, submit a test, confirm the email arrives.
+> **https://blach-construction.github.io/egnyte-ai-safeguards-form/**
 
-**Alternative: GitHub Pages** — works too, but on a free account the repo must be
-**public** (the source code is visible to anyone; the EmailJS public key is safe
-to expose, but the rest is public). Push `deploy/index.html` to a repo, enable
-Pages, done.
+- Repo: `Blach-Construction/egnyte-ai-safeguards-form` (public — required for free
+  GitHub Pages).
+- `build.ps1` writes `index.html` at the repo root, which Pages serves.
+- Deploy is automated by `.github/workflows/pages.yml` (GitHub Actions). **Every
+  push to `main` rebuilds the live site.**
 
-Note: any free static host gives a **publicly reachable** URL (no login). The page
+**To update the live site:**
+1. Edit `template.html` (and/or assets), run `build.ps1` to regenerate `index.html`.
+2. `git add -A && git commit -m "..." && git push`
+3. The Actions workflow redeploys automatically (~1 min). Check progress with
+   `gh run watch` or the repo's Actions tab.
+
+Note: a free static host gives a **publicly reachable** URL (no login). The page
 only shows department names and generic category descriptions — actual folder
 paths and submissions are never stored on the page, they only go out in the email.
 Free email-login gating (if ever needed) is possible via Cloudflare Pages +
